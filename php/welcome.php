@@ -13,7 +13,7 @@ echo'
 
             <div class="topSide">
                 <div class="topLeft"><img class="logo" src="../images/logo.png"></div>
-                <div class="topRight"><button class="signin">Sign in</button></div>
+                <div class="topRight"><button class="signin" onclick="window.location.href="signin.php" " >Sign in</button></div>
             </div>
 
             <div class="middleSide">
