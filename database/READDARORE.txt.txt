@@ -1,0 +1,3 @@
+my port is 3315 connect to your own port(3308(Maryam) or 3306(shaito)... depending on your used xampp port /do this by changing $port variable to your own port in corresponding php files)
+do import on phpmyadmin for quiz-app.php (if any error use alternative file)
+(the db is just for our progress not finished)
