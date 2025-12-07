@@ -1,4 +1,4 @@
-<?php
+<?php 
 echo'
     <!DOCTYPE html>
     <html lang="en">
@@ -15,10 +15,10 @@ echo'
                 <div class="topLeft"><img class="logo" src="../images/logo.png"></div>
 
                 <div class="topRight"><button class="signin" onclick="window.location.href="signin.php" " >Sign in</button></div>
->>>>>>> origin/back-quiz-app
+
             </div>
 
-            <div class="middleSide">
+            <div class="middle1">
                 <div class="middleLeft">
                     <div class="title">Think Byte</div>
                     <div class="subtitle">A sleek, interactive website where programmers<br> test and 
@@ -30,12 +30,20 @@ echo'
                 <div class="middleRight"><img src="../images/welcomePage.png" style="width: 650px; height: 444px;"></div>
             </div>
 
-            <hr>
+            <div class="middle2">
+                <div id="aboutUs"></div>
+                <div class="middle2-top">
+                    <h1>Our Mission</h1>
+                    <p>Empowering the next generation of developers through practice and community.</p>
+                </div>
+
+            </div>
+            
             <footer>
                 <div class="footer">
                     <div class="bottomLeft"><img src="../images/logo.png" style="width: 170px;height:95px;margin-top:-10px;"></div>
                     <div class="bottomRight">
-                        <a href="aboutUs.php">About us&nbsp;&nbsp;</a>
+                        <a href="#aboutUs">About us&nbsp;&nbsp;</a>
                         <span class="separator">|</span>
                         <a href="contactUs.php">&nbsp;&nbsp;Contact us&nbsp;&nbsp;</a>
                         <span class="separator">|</span>
