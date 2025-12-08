@@ -13,9 +13,14 @@ echo'
 
             <div class="topSide">
                 <div class="topLeft"><img class="logo" src="../images/logo.png"></div>
-
-                <div class="topRight"><button class="signin" onclick="window.location.href="signin.php" " >Sign in</button></div>
-
+                
+                <div class="topRight">       
+                        <a href="#aboutUs">About us&nbsp;&nbsp;</a>
+                        <a href="contactUs.php">&nbsp;&nbsp;Contact us&nbsp;&nbsp;</a>
+                        <a href="reviewUs.php">&nbsp;&nbsp;Review us</a>
+                        
+                        <button class="signin" onclick="window.location.href="signin.php" " >Sign in</button>
+                </div>
             </div>
 
             <div class="middle1">
@@ -42,13 +47,6 @@ echo'
             <footer>
                 <div class="footer">
                     <div class="bottomLeft"><img src="../images/logo.png" style="width: 170px;height:95px;margin-top:-10px;"></div>
-                    <div class="bottomRight">
-                        <a href="#aboutUs">About us&nbsp;&nbsp;</a>
-                        <span class="separator">|</span>
-                        <a href="contactUs.php">&nbsp;&nbsp;Contact us&nbsp;&nbsp;</a>
-                        <span class="separator">|</span>
-                        <a href="reviewUs.php">&nbsp;&nbsp;Review us</a>
-                    </div>
                 </div>
             </footer>
 

@@ -9,21 +9,25 @@
     top: 0;
     left: 0;
     height: 55px;
-    justify-content: space-between;
 }
-.topLeft{
+.topRight{
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 .logo{
     margin-top: -32px;
     width: 180px; 
     height: 120px; 
 }
-
+a{
+    text-decoration: none;
+    color: black;
+    font-weight: 700;
+}
 .signin{
     margin-top: 6px;
-    margin-right: 120px;
     height: 40px;
     width: 90px;
     border: 0px;
@@ -69,13 +73,6 @@
 }
 .middle2-top{
     background-color:rgb(95, 210, 249) ;
-}
-.bottomRight{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-right: 50px;
-    margin-top: 20px;
 }
 .footer{
     border-top: 1px solid black;
