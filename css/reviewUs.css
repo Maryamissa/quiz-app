@@ -131,7 +131,7 @@ nav a{
 .rating-label {
     font-size: 14px;
     font-weight: bold;
-    color: #333;
+    color: white;
     display: block;
     margin-bottom: 5px;
 }
@@ -152,6 +152,7 @@ nav a{
     cursor: pointer;
     transition: color 0.2s ease;
     padding: 3px;
+    margin-right: 20px;
 }
 
 

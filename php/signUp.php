@@ -11,8 +11,7 @@
         <body>
             <div class="page">
                 <header>
-                    <div><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logoSign.png"></div>
-                    <nav>
+                    <div><a href="welcome.php"><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logoSign.png"></a></div>
                         <a href="welcome.php">Home</a>
                         <a href="contactUs.php">Contact</a>
                         <a href="aboutUs.php">About</a>

@@ -5,13 +5,13 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="../css/reviewUs.css">
+            <link rel="stylesheet" href="../css/reviewus.css">
             <title>SignUp</title>
         </head>
         <body>
             <div class="page">
                 <header>
-                    <div><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logoSign.png"></div>
+                    <div><a href="welcome.php"><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logoSign.png"></a></div>
                 </header>
                 <div class="container">
                     <div class="left">
