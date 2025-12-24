@@ -42,7 +42,7 @@ html{
 .signin:hover{
     border: none;
     border-radius: 15px;
-    background-color: rgb(86, 191, 226);
+    background-color: rgb(66, 128, 196);
     font-weight: 600;
 }
 .middle1{
@@ -69,14 +69,14 @@ html{
     color: white;
     background-color: black;
     border-radius: 15px;
-    height: 47px;
-    width: 110px;
+    height: 50px;
+    width: 120px;
     border: 0px solid;
     margin-top: 50px;
 }
 .start:hover{
     border: 1px solid none;
-    background-color: rgb(95, 210, 249);
+    background-color: rgb(66, 128, 196);
     font-weight: 500;
     color: black;
 }
@@ -145,7 +145,7 @@ html{
 
 .tb{
     font-weight: bold;
-    color: rgb(29, 121, 160);
+    color: rgb(66, 128, 196);
 }
 a{
     text-decoration: none;

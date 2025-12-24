@@ -14,7 +14,6 @@
                     <div><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logoSign.png"></div>
                     <nav>
                         <a href="welcome.php">Home</a>
-                        <a href="aboutUs.php">About</a>
                         <a href="reviewUs.php">Review</a>
                     </nav>
                 </header>

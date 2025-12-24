@@ -27,7 +27,7 @@ $stmt->execute();
 $stmt->store_result();
 
 if( $hashed_password = $password ){
-    header("Location: mainPage.php");
+    header("Location: explore.php");
     exit;
 } else {
     echo "<script>alert('Login failed: Incorrect email or password'); window.history.back();</script>";

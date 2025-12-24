@@ -12,6 +12,10 @@
             <div class="page">
                 <header>
                     <div><a href="welcome.php"><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logoSign.png"></a></div>
+                    <nav>
+                        <a href="welcome.php">Home</a>
+                        <a href="contactUs.php">Contact</a>
+                    </nav>
                 </header>
                 <div class="container">
                     <div class="left">

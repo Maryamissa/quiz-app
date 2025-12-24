@@ -1,0 +1,133 @@
+
+.mainBox {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    border-radius: 15px;
+}
+
+.header {
+    background: white;
+    height: fit-content;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 15px;
+}
+
+.logo {
+    height: 50px;
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: rgb(20, 20, 235)a;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+
+main img {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid #1ba3ff;
+    margin-bottom: 20px;
+}
+
+main h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+main p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+main h2 {
+    margin-top: 30px;
+    font-size: 24px;
+}
+
+
+main ul {
+    list-style: none;
+    padding: 0;
+}
+
+main ul li {
+    background-color: #fff;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 10px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.logOut{
+    height: 50px;
+    width: 150px;
+    border-radius: 15px;
+    background-color: rgb(20, 20, 235);
+    color: #fff;
+    font-weight: 700;
+    font-size: larger;
+    margin-left: 65px;
+}
+.logOut:hover{
+    transform: translateY(-2px);
+    background:rgb(65, 76, 192);
+    box-shadow: #333;
+}
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    padding: 0 30px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.footer .bottomLeft img {
+    width: 170px;
+    height: 95px;
+    object-fit: contain;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #162e94 100%, rgb(20, 20, 235) 00%);
+    min-height: 100vh;
+    color: #333;
+}

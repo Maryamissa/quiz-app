@@ -15,7 +15,7 @@
                     <nav>
                         <a href="welcome.php">Home</a>
                         <a href="contactUs.php">Contact</a>
-                        <a href="aboutUs.php">About</a>
+                        <a href="reviewUs.php">Review</a>
                     </nav>
                 </header>
                 <div class="container">
