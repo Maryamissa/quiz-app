@@ -58,14 +58,14 @@ echo '<!doctype html>
 <head>
     <meta charset="utf-8">
     <title>Quiz Maker</title>
-    <link rel="stylesheet" href="../css/quizMaker.css">
+    <link rel="stylesheet" href="../css/QuizMaker.css">
     <script src="js/quizmaker.js" defer></script>
 </head>
 <body>
 <div class="mainBox">
   <header class="header">
             <div class="logo-container">
-                <a href="welcome.php"><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logo.png" alt="Logo" class="logo"></a>
+                <a href="explore.php"><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logo.png" alt="Logo" class="logo"></a>
             </div>
             <nav class="nav-links">
                 <a href="explore.php">Explore</a>
@@ -74,11 +74,11 @@ echo '<!doctype html>
                 <a href="chatrooms.php">Chatrooms</a>
                 <a href="profile.php">Profile</a>
             </nav>
-        </header>
+    </header>
     <main>
         <h1>Create a Quiz</h1>';
 
-if (empty($step) || $step == 1) {
+    if (empty($step) || $step == 1) {
     echo '<form method="post">
         <input type="hidden" name="step" value="1">
         <label>Title: <input name="title" required></label><br>

@@ -11,7 +11,6 @@ $port = 3315;
 $conn = new mysqli($host, $user, $pass, $dbname, $port);
 if ($conn->connect_error) die('Connection failed: ' . $conn->connect_error);
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_room'])) {
     $name = trim($_POST['name']);
     $created_by = 1; 
@@ -43,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_room'])) {
     $username = trim($_POST['username']);
     
     if ($room_id > 0 && !empty($username)) {
-        
         $u = $conn->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
         $u->bind_param('s', $username);
         $u->execute();
@@ -52,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_room'])) {
         if ($userResult->num_rows > 0) {
             $userRow = $userResult->fetch_assoc();
             $user_id = $userRow['id'];
-            
             
             $check = $conn->prepare("SELECT id FROM chatroom_users WHERE chatroom_id = ? AND user_id = ?");
             $check->bind_param('ii', $room_id, $user_id);
@@ -69,13 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_room'])) {
                     $upd->execute();
                     $upd->close();
                     
-                    // go to chatroom by get
                     header("Location: chatroom.php?room_id=$room_id&username=" . urlencode($username));
                     exit;
                 }
                 $join->close();
             } else {
-                
                 header("Location: chatroom.php?room_id=$room_id&username=" . urlencode($username));
                 exit;
             }
@@ -88,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_room'])) {
     }
 }
 
-// Get rooms
 $rooms = [];
 $res = $conn->query("
     SELECT 
@@ -106,14 +100,13 @@ while ($r = $res->fetch_assoc()) {
     $rooms[] = $r;
 }
 
-// Get all users for dropselect
 $users = [];
 $users_res = $conn->query("SELECT username FROM users ORDER BY username");
 while ($u = $users_res->fetch_assoc()) {
     $users[] = $u['username'];
 }
-?>
-<!DOCTYPE html>
+
+echo '<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -128,7 +121,7 @@ while ($u = $users_res->fetch_assoc()) {
     <div class="main-container">
         <header class="header">
             <div class="logo-container">
-                <img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logo.png" alt="Logo" class="logo">
+                <img style="width: 180px;height: 120px;margin-left: 20px;" src="../images/logo.png" alt="Logo" class="logo">
             </div>
             <nav class="nav-links">
                 <a href="explore.php">Explore</a>
@@ -140,17 +133,17 @@ while ($u = $users_res->fetch_assoc()) {
         </header>
         
         <main>
-            <h1 style="color: white; text-align: center; margin-bottom: 30px; font-size: 2.5rem;">💬 Chat Rooms</h1>
+            <h1 style="color: white; text-align: center; margin-bottom: 30px; font-size: 2.5rem;">💬 Chat Rooms</h1>';
             
-            <?php if (isset($success)): ?>
-                <div class="alert success"><?php echo htmlspecialchars($success); ?></div>
-            <?php endif; ?>
+            if (isset($success)) {
+                echo '<div class="alert success">' . htmlspecialchars($success) . '</div>';
+            }
             
-            <?php if (isset($error)): ?>
-                <div class="alert error"><?php echo htmlspecialchars($error); ?></div>
-            <?php endif; ?>
+            if (isset($error)) {
+                echo '<div class="alert error">' . htmlspecialchars($error) . '</div>';
+            }
             
-            <div class="main-content">
+            echo '<div class="main-content">
                 <section class="section">
                     <h2>➕ Create New Room</h2>
                     <form method="post">
@@ -164,76 +157,80 @@ while ($u = $users_res->fetch_assoc()) {
                 </section>
                 
                 <section class="section">
-                    <h2>📢 Available Rooms (<?php echo count($rooms); ?>)</h2>
+                    <h2>📢 Available Rooms (' . count($rooms) . ')</h2>';
                     
-                    <?php if (empty($rooms)): ?>
-                        <p style="text-align: center; color: #666; padding: 20px;">
+                    if (empty($rooms)) {
+                        echo '<p style="text-align: center; color: #666; padding: 20px;">
                             No chat rooms available. Create the first one!
-                        </p>
-                    <?php else: ?>
-                        <ul class="room-list">
-                            <?php foreach ($rooms as $room): ?>
-                                <li class="room-item">
+                        </p>';
+                    } else {
+                        echo '<ul class="room-list">';
+                        foreach ($rooms as $room) {
+                            echo '<li class="room-item">
                                     <div class="room-info">
-                                        <h3>#<?php echo htmlspecialchars($room['name']); ?></h3>
+                                        <h3>#' . htmlspecialchars($room['name']) . '</h3>
                                         <div class="room-meta">
-                                            Created by <?php echo htmlspecialchars($room['creator_name'] ?? 'Unknown'); ?> •
-                                            <?php echo date('M d, Y', strtotime($room['created_at'])); ?>
-                                            <span class="user-count">👥 <?php echo (int)$room['user_count']; ?> members</span>
+                                            Created by ' . htmlspecialchars($room['creator_name'] ?? 'Unknown') . ' •
+                                            ' . date('M d, Y', strtotime($room['created_at'])) . '
+                                            <span class="user-count">👥 ' . (int)$room['user_count'] . ' members</span>
                                         </div>
-                                        
-                                        <form method="post" class="join-form">
-                                            <input type="hidden" name="room_id" value="<?php echo (int)$room['id']; ?>">
-                                            <select name="username" required>
-                                                <option value="">Select your username</option>
-                                                <?php foreach ($users as $user): ?>
-                                                    <option value="<?php echo htmlspecialchars($user); ?>">
-                                                        <?php echo htmlspecialchars($user); ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <button type="submit" name="join_room">Join</button>
-                                        </form>
+
+                                        <div class="join-form">
+                                            <form method="post" class="join-only">
+                                                <input type="hidden" name="room_id" value="' . (int)$room['id'] . '">
+                                                <input type="text" name="username" required placeholder="Enter your username">
+                                                <button type="submit" name="join_room">Join</button>
+                                            </form>
+                                            
+                                            <!-- Delete form that will cause page reload and remove room -->
+                                            <form method="post" class="delete-only" onsubmit="return confirm(\'Are you sure you want to permanently delete this room?\')">
+                                                <input type="hidden" name="room_id" value="' . (int)$room['id'] . '">
+                                                <button type="submit" name="delete_room" class="delete-btn">Delete</button>
+                                            </form>
+                                        </div>
+
                                     </div>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                </section>
+                                </li>';
+                        }
+                        echo '</ul>';
+                    }
+                    
+            echo '</section>
             </div>
         </main>
         
         <footer class="footer">
-            <p>© <?php echo date('Y'); ?> thanks for visiting!</p>
+            <p>© ' . date('Y') . ' thanks for visiting!</p>
             <p style="margin-top: 10px; font-size: 0.9em;"></p>
         </footer>
     </div>
     
     <script>
-        // Auto-focus on room name input
-        document.getElementById('room_name')?.focus();
+        document.getElementById("room_name")?.focus();
         
-        // Show confirmation before creating room
-        document.querySelector('button[name="create_room"]')?.addEventListener('click', function(e) {
-            const roomName = document.getElementById('room_name').value.trim();
+        document.querySelector("button[name=\'create_room\']")?.addEventListener("click", function(e) {
+            const roomName = document.getElementById("room_name").value.trim();
             if (!roomName) {
                 e.preventDefault();
-                alert('Please enter a room name!');
-                document.getElementById('room_name').focus();
+                alert("Please enter a room name!");
+                document.getElementById("room_name").focus();
             }
         });
         
-        // Smooth scroll for messages
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.alert');
+        document.addEventListener("DOMContentLoaded", function() {
+            const alerts = document.querySelectorAll(".alert");
             alerts.forEach(alert => {
                 setTimeout(() => {
-                    alert.style.transition = 'opacity 0.5s ease';
-                    alert.style.opacity = '0';
+                    alert.style.transition = "opacity 0.5s ease";
+                    alert.style.opacity = "0";
                     setTimeout(() => alert.remove(), 500);
                 }, 5000);
             });
         });
+
+        
     </script>
 </body>
-</html>
+</html>';
+?>
+```

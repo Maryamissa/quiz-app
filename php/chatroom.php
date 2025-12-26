@@ -1,5 +1,4 @@
 <?php
-// Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -15,12 +14,10 @@ if ($conn->connect_error) die('Connection failed: ' . $conn->connect_error);
 $room_id = (int)($_GET['room_id'] ?? 0);
 $username = trim($_GET['username'] ?? '');
 
-// Validate inputs
 if (!$room_id || !$username) {
     die("Error: Room ID and Username are required. <a href='chatrooms.php'>Go back</a>");
 }
 
-// Get user info
 $u = $conn->prepare("SELECT id, username FROM users WHERE username = ? LIMIT 1");
 $u->bind_param('s', $username);
 $u->execute();
@@ -41,7 +38,6 @@ if (!$userRow) {
 
 $user_id = $userRow['id'];
 
-// Get room info
 $room = $conn->prepare("SELECT * FROM chatrooms WHERE id = ? LIMIT 1");
 $room->bind_param('i', $room_id);
 $room->execute();
@@ -51,29 +47,68 @@ if (!$roomResult) {
     die("Room not found. <a href='chatrooms.php'>Go back</a>");
 }
 
-// Ensure user is in chatroom
 $check_member = $conn->prepare("SELECT id FROM chatroom_users WHERE chatroom_id = ? AND user_id = ?");
 $check_member->bind_param('ii', $room_id, $user_id);
 $check_member->execute();
 if (!$check_member->get_result()->fetch_assoc()) {
-    // Add user to chatroom
     $join = $conn->prepare("INSERT INTO chatroom_users (chatroom_id, user_id) VALUES (?, ?)");
     $join->bind_param('ii', $room_id, $user_id);
     $join->execute();
     
-    // Update user count
     $upd = $conn->prepare("UPDATE chatrooms SET user_count = user_count + 1 WHERE id = ?");
     $upd->bind_param('i', $room_id);
     $upd->execute();
 }
 
-?>
-<!DOCTYPE html>
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_room'])) {
+    $room_id = (int)$_POST['room_id'];
+    $created_by = 1; // Change this to match your actual user ID
+    
+    error_log("Attempting to delete room ID: $room_id by user: $created_by");
+    
+    // Check ownership before deleting
+    $check = $conn->prepare("SELECT id FROM chatrooms WHERE id = ? AND created_by = ?");
+    $check->bind_param('ii', $room_id, $created_by);
+    $check->execute();
+    $result = $check->get_result();
+    
+    error_log("Ownership check result: " . $result->num_rows . " rows found");
+    
+    if ($result->num_rows === 1) {
+        // Delete chatroom_users entries first (foreign key constraint)
+        $delete_users = $conn->prepare("DELETE FROM chatroom_users WHERE chatroom_id = ?");
+        $delete_users->bind_param('i', $room_id);
+        $users_deleted = $delete_users->execute();
+        $delete_users->close();
+        
+        error_log("Chatroom users deleted: " . ($users_deleted ? 'Yes' : 'No'));
+        
+        // Delete the chatroom
+        $delete_room = $conn->prepare("DELETE FROM chatrooms WHERE id = ?");
+        $delete_room->bind_param('i', $room_id);
+        
+        if ($delete_room->execute()) {
+            error_log("Room deleted successfully");
+            $success = "Room deleted successfully!";
+        } else {
+            error_log("Failed to delete room: " . $delete_room->error);
+            $error = "Failed to delete room: " . $delete_room->error;
+        }
+        $delete_room->close();
+    } else {
+        error_log("User $created_by doesn't own room $room_id or room doesn't exist");
+        $error = "You can only delete rooms you created!";
+    }
+    $check->close();
+}
+
+
+echo '<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room: <?php echo htmlspecialchars($roomResult['name']); ?></title>
+    <title>Room: ' . htmlspecialchars($roomResult['name']) . '</title>
     <style>
         * {
             margin: 0;
@@ -82,7 +117,7 @@ if (!$check_member->get_result()->fetch_assoc()) {
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -239,7 +274,6 @@ if (!$check_member->get_result()->fetch_assoc()) {
             transform: translateY(0);
         }
         
-        /* Scrollbar styling */
         #messages::-webkit-scrollbar {
             width: 8px;
         }
@@ -278,18 +312,17 @@ if (!$check_member->get_result()->fetch_assoc()) {
     <div class="chat-container">
         <div class="chat-header">
             <div class="room-info">
-                <h1>💬 <?php echo htmlspecialchars($roomResult['name']); ?></h1>
-                <div class="user-info">👤 <?php echo htmlspecialchars($username); ?></div>
+                <h1>💬 ' . htmlspecialchars($roomResult['name']) . '</h1>
+                <div class="user-info">👤 ' . htmlspecialchars($username) . '</div>
             </div>
             <a href="chatrooms.php" class="back-btn">← Back to Rooms</a>
         </div>
         
         <div class="online-users">
-            Room ID: <?php echo $room_id; ?> | Members: <?php echo $roomResult['user_count']; ?>
+            Room ID: ' . $room_id . ' | Members: ' . $roomResult['user_count'] . '
         </div>
         
         <div id="messages">
-            <!-- Messages will be loaded here -->
             <div style="text-align: center; padding: 20px; color: #888;">
                 Loading messages...
             </div>
@@ -304,45 +337,40 @@ if (!$check_member->get_result()->fetch_assoc()) {
     </div>
 
     <script>
-        const roomId = <?php echo $room_id; ?>;
-        const userId = <?php echo $user_id; ?>;
-        const username = "<?php echo addslashes($username); ?>";
+        const roomId = ' . $room_id . ';
+        const userId = ' . $user_id . ';
+        const username = "' . addslashes($username) . '";
         
-        // Load messages immediately
         loadMessages();
         
-        // Auto-refresh every 1.5 seconds
         setInterval(loadMessages, 1500);
         
-        // Auto-scroll to bottom
         function scrollToBottom() {
-            const messagesDiv = document.getElementById('messages');
+            const messagesDiv = document.getElementById("messages");
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
         
-        // Load messages from server
         function loadMessages() {
-            fetch(`load_messages.php?room_id=${roomId}`)
+            fetch("load_messages.php?room_id=" + roomId)
                 .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
+                    if (!response.ok) throw new Error("Network response was not ok");
                     return response.text();
                 })
                 .then(html => {
-                    const messagesDiv = document.getElementById('messages');
+                    const messagesDiv = document.getElementById("messages");
                     messagesDiv.innerHTML = html;
                     
-                    // Add message classes based on sender
-                    const messages = messagesDiv.querySelectorAll('.message');
+                    const messages = messagesDiv.querySelectorAll(".message");
                     messages.forEach(msg => {
-                        const usernameElement = msg.querySelector('.username');
+                        const usernameElement = msg.querySelector(".username");
                         if (usernameElement) {
                             const msgUsername = usernameElement.textContent.trim();
                             if (msgUsername === username) {
-                                msg.classList.add('sent');
-                                msg.classList.remove('received');
+                                msg.classList.add("sent");
+                                msg.classList.remove("received");
                             } else {
-                                msg.classList.add('received');
-                                msg.classList.remove('sent');
+                                msg.classList.add("received");
+                                msg.classList.remove("sent");
                             }
                         }
                     });
@@ -350,73 +378,65 @@ if (!$check_member->get_result()->fetch_assoc()) {
                     scrollToBottom();
                 })
                 .catch(error => {
-                    console.error('Error loading messages:', error);
-                    document.getElementById('messages').innerHTML = 
-                        '<div style="text-align: center; padding: 20px; color: #ff4444;">Error loading messages. Please refresh.</div>';
+                    console.error("Error loading messages:", error);
+                    document.getElementById("messages").innerHTML = 
+                        "<div style=\"text-align: center; padding: 20px; color: #ff4444;\">Error loading messages. Please refresh.</div>";
                 });
         }
         
-        // Send message
-        document.getElementById('sendForm').addEventListener('submit', function(e) {
+        document.getElementById("sendForm").addEventListener("submit", function(e) {
             e.preventDefault();
             
-            const msgInput = document.getElementById('msgInput');
+            const msgInput = document.getElementById("msgInput");
             const message = msgInput.value.trim();
             
             if (!message) return;
             
-            // Disable input and show loading
             msgInput.disabled = true;
-            const submitBtn = this.querySelector('button');
+            const submitBtn = this.querySelector("button");
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
+            submitBtn.textContent = "Sending...";
             
-            // Create form data
             const formData = new URLSearchParams();
-            formData.append('room_id', roomId);
-            formData.append('user_id', userId);
-            formData.append('message', message);
+            formData.append("room_id", roomId);
+            formData.append("user_id", userId);
+            formData.append("message", message);
             
-            // Send to server
-            fetch('send_message.php', {
-                method: 'POST',
+            fetch("send_message.php", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: formData
             })
             .then(response => {
-                if (!response.ok) throw new Error('Failed to send message');
+                if (!response.ok) throw new Error("Failed to send message");
                 
-                // Clear input
-                msgInput.value = '';
+                msgInput.value = "";
                 
-                // Reload messages
                 loadMessages();
             })
             .catch(error => {
-                console.error('Error sending message:', error);
-                alert('Failed to send message. Please try again.');
+                console.error("Error sending message:", error);
+                alert("Failed to send message. Please try again.");
             })
             .finally(() => {
-                // Re-enable input
                 msgInput.disabled = false;
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Send';
+                submitBtn.textContent = "Send";
                 msgInput.focus();
             });
         });
         
-        // Focus input on page load
-        document.getElementById('msgInput').focus();
+        document.getElementById("msgInput").focus();
         
-        // Send message on Enter (but allow Shift+Enter for new line)
-        document.getElementById('msgInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
+        document.getElementById("msgInput").addEventListener("keydown", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                document.getElementById('sendForm').dispatchEvent(new Event('submit'));
+                document.getElementById("sendForm").dispatchEvent(new Event("submit"));
             }
         });
     </script>
 </body>
-</html>
+</html>';
+?>
