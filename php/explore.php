@@ -37,7 +37,7 @@ if ($res2) {
 <div class="mainBox">
  <header class="header">
             <div class="logo-container">
-                <img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logo.png" alt="Logo" class="logo">
+                <img style="width: 180px;height: 120px;margin-left: 20px;" src="../images/logo.png" alt="Logo" class="logo">
             </div>
             <nav class="nav-links">
                 <a href="explore.php"style="background: rgb(20, 20, 235); color: white;">Explore</a>

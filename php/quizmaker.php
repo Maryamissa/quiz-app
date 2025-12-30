@@ -65,7 +65,7 @@ echo '<!doctype html>
 <div class="mainBox">
   <header class="header">
             <div class="logo-container">
-                <a href="explore.php"><img style="width: 130px;height: 110px;margin-left: 20px;" src="../images/logo.png" alt="Logo" class="logo"></a>
+                <a href="explore.php"><img style="width: 180px;height: 120px;margin-left: 20px;" src="../images/logo.png" alt="Logo" class="logo"></a>
             </div>
             <nav class="nav-links">
                 <a href="explore.php">Explore</a>

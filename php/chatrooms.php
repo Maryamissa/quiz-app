@@ -96,6 +96,39 @@ $res = $conn->query("
     ORDER BY c.created_at DESC
 ");
 
+// DELETE CHAT ROOM
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_room'])) {
+    $room_id = (int)$_POST['room_id'];
+
+    if ($room_id > 0) {
+
+        // 1. Delete chatroom users
+        $stmt1 = $conn->prepare("DELETE FROM chatroom_users WHERE chatroom_id = ?");
+        $stmt1->bind_param("i", $room_id);
+        $stmt1->execute();
+        $stmt1->close();
+
+        // 2. Delete chat messages (if exists)
+        $stmt2 = $conn->prepare("DELETE FROM chat_messages WHERE chatroom_id = ?");
+        $stmt2->bind_param("i", $room_id);
+        $stmt2->execute();
+        $stmt2->close();
+
+        // 3. Delete chatroom
+        $stmt3 = $conn->prepare("DELETE FROM chatrooms WHERE id = ?");
+        $stmt3->bind_param("i", $room_id);
+
+        if ($stmt3->execute()) {
+            $success = "Chatroom deleted successfully!";
+        } else {
+            $error = "Failed to delete chatroom!";
+        }
+
+        $stmt3->close();
+    }
+}
+
+
 while ($r = $res->fetch_assoc()) {
     $rooms[] = $r;
 }
@@ -127,7 +160,7 @@ echo '<!DOCTYPE html>
                 <a href="explore.php">Explore</a>
                 <a href="quiztaker.php">Quiz Taker</a>
                 <a href="quizmaker.php">Quiz Maker</a>
-                <a href="chatrooms.php" style="background: #667eea; color: white;">Chatrooms</a>
+                <a href="chatrooms.php" style="background: rgb(20, 20, 235); color: white;">Chatrooms</a>
                 <a href="profile.php">Profile</a>
             </nav>
         </header>

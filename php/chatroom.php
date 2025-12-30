@@ -118,7 +118,7 @@ echo '<!DOCTYPE html>
         
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background:linear-gradient(135deg, #162e94 100%, rgb(20, 20, 235) 00%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -133,7 +133,7 @@ echo '<!DOCTYPE html>
         }
         
         .chat-header {
-            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            background: rgb(20, 20, 235);
             color: white;
             padding: 20px 30px;
             display: flex;
@@ -255,7 +255,7 @@ echo '<!DOCTYPE html>
         
         #sendForm button {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: rgb(20, 20, 235);
             color: white;
             border: none;
             border-radius: 25px;
